@@ -247,10 +247,10 @@ class GraphQLIntegrationTest {
       assertNotNull(data, "Query data should not be null")
       assertNotNull(data.country, "Country field should not be null")
       assertTrue("Country code should match") {
-        data.country?.code.equals(countryCode, ignoreCase = true)
+        data.country.code.equals(countryCode, ignoreCase = true)
       }
 
-      println("Direct country query returned: ${data.country?.name} (${data.country?.code})")
+      println("Direct country query returned: ${data.country.name} (${data.country.code})")
     } catch (e: Exception) {
       println("Test failed with network error: ${e.message}")
       assertTrue("Network integration test completed (may have network issues)") { true }
@@ -273,8 +273,8 @@ class GraphQLIntegrationTest {
           }
 
       // If successful, return immediately
-      if (lastResult?.isSuccess == true) {
-        return lastResult!!
+      if (lastResult.isSuccess) {
+        return lastResult
       }
 
       // Log the attempt if not the last one

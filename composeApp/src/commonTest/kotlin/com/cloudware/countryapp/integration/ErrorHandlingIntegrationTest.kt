@@ -12,12 +12,12 @@ import com.cloudware.countryapp.domain.usecase.GetCountryDetailsUseCase
 import com.cloudware.countryapp.domain.usecase.InvalidCountryCodeException
 import com.cloudware.countryapp.domain.usecase.SearchCountriesUseCase
 import com.cloudware.countryapp.testutils.TestData
+import kotlinx.coroutines.test.runTest
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertIs
 import kotlin.test.assertNotNull
 import kotlin.test.assertTrue
-import kotlinx.coroutines.test.runTest
 
 /**
  * Integration tests for error handling scenarios throughout the application. These tests verify
@@ -135,7 +135,7 @@ class ErrorHandlingIntegrationTest {
               Result.failure(RuntimeException("Repository error: Database connection failed"))
 
           override suspend fun getCountryDetails(
-              countryCode: String
+              code: String
           ): Result<com.cloudware.countryapp.domain.model.Country> =
               Result.failure(RuntimeException("Repository error: Country not found in database"))
 
@@ -191,7 +191,7 @@ class ErrorHandlingIntegrationTest {
               Result.success(TestData.testCountriesList)
 
           override suspend fun getCountryDetails(
-              countryCode: String
+              code: String
           ): Result<com.cloudware.countryapp.domain.model.Country> =
               Result.success(TestData.testCountryUS)
 
@@ -238,7 +238,7 @@ class ErrorHandlingIntegrationTest {
           }
 
           override suspend fun getCountryDetails(
-              countryCode: String
+              code: String
           ): Result<com.cloudware.countryapp.domain.model.Country> {
             return Result.failure(originalError)
           }
@@ -286,7 +286,7 @@ class ErrorHandlingIntegrationTest {
               }
 
           override suspend fun getCountryDetails(
-              countryCode: String
+              code: String
           ): Result<com.cloudware.countryapp.domain.model.Country> =
               Result.success(TestData.testCountryUS)
 

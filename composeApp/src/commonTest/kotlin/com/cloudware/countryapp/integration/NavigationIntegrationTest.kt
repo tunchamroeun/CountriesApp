@@ -10,7 +10,10 @@ import com.cloudware.countryapp.domain.repository.CountryRepository
 import com.cloudware.countryapp.domain.usecase.GetCountriesUseCase
 import com.cloudware.countryapp.domain.usecase.GetCountryDetailsUseCase
 import com.cloudware.countryapp.domain.usecase.SearchCountriesUseCase
+import com.cloudware.countryapp.presentation.features.countries.CountriesComponent
 import com.cloudware.countryapp.presentation.features.countries.CountriesStore
+import com.cloudware.countryapp.presentation.features.details.DetailsComponent
+import com.cloudware.countryapp.presentation.features.search.SearchComponent
 import com.cloudware.countryapp.testutils.TestData
 import com.cloudware.countryapp.testutils.testCoroutineDispatchers
 import kotlin.test.Test
@@ -39,7 +42,7 @@ class NavigationIntegrationTest {
               Result.success(TestData.testCountriesList)
 
           override suspend fun getCountryDetails(
-              countryCode: String
+              code: String
           ): Result<com.cloudware.countryapp.domain.model.Country> =
               Result.success(TestData.testCountryUS)
 
@@ -106,7 +109,6 @@ class NavigationIntegrationTest {
 
     // Then
     assertIs<CountriesStore.State>(initialState, "Component should have proper state")
-    assertTrue("Component should be properly initialized") { component.state.value != null }
 
     println("✅ Component creation and state initialization works correctly")
   }
@@ -126,10 +128,6 @@ class NavigationIntegrationTest {
     val stackItems = rootComponent.stack.value.items
     assertTrue("Scenario 2: Stack should contain items") { stackItems.isNotEmpty() }
     assertEquals(1, stackItems.size, "Scenario 2: Initial stack should have 1 item")
-
-    // Test Scenario 3: Component access
-    val countriesComponent = (scenario1Child as RootComponent.Child.CountriesChild).component
-    assertTrue("Scenario 3: Component should be accessible") { countriesComponent != null }
 
     println("✅ Multiple navigation scenarios work correctly")
   }
@@ -165,15 +163,14 @@ class NavigationIntegrationTest {
     // Then
     when (currentChild) {
       is RootComponent.Child.CountriesChild -> {
-        assertTrue("Countries component should be accessible") { currentChild.component != null }
-        assertIs<com.cloudware.countryapp.presentation.features.countries.CountriesComponent>(
+        assertIs<CountriesComponent>(
             currentChild.component, "Should be proper CountriesComponent type")
       }
       is RootComponent.Child.DetailsChild -> {
-        assertTrue("Details component should be accessible") { currentChild.component != null }
+        assertIs<DetailsComponent>(currentChild.component, "Should be proper DetailsComponent type")
       }
       is RootComponent.Child.SearchChild -> {
-        assertTrue("Search component should be accessible") { currentChild.component != null }
+        assertIs<SearchComponent>(currentChild.component, "Should be proper SearchComponent type")
       }
     }
 
@@ -191,7 +188,6 @@ class NavigationIntegrationTest {
     val activeChild = stack.active.instance
 
     // Then
-    assertTrue("Stack should have active configuration") { stack.active != null }
     assertIs<RootComponent.Child>(activeChild, "Active child should be proper type")
 
     println("✅ Navigation configuration tracking works correctly")
@@ -214,7 +210,7 @@ class NavigationIntegrationTest {
               Result.success(TestData.testCountriesList)
 
           override suspend fun getCountryDetails(
-              countryCode: String
+              code: String
           ): Result<com.cloudware.countryapp.domain.model.Country> =
               Result.success(TestData.testCountryUS)
 
