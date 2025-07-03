@@ -1,0 +1,313 @@
+# Countries App - Kotlin Multiplatform Project Rules
+
+## Project Architecture Overview
+This is a Kotlin Multiplatform (KMP) project using:
+- **Architecture**: Decompose + MVIKotlin (MVI pattern) + Domain Driven Design
+- **Networking**: Apollo GraphQL Client (https://countries.trevorblades.com/graphql)
+- **UI**: Compose Multiplatform
+- **DI**: Kodein-DI
+- **Localization**: Compose Resources for i18n
+- **Platforms**: Android, iOS
+- **Data Strategy**: GraphQL-only with Apollo (no local database caching)
+
+## Package Structure Rules (Domain Driven Design)
+
+### Core Package Structure
+```
+com.cloudware.countryapp/
+├── core/                    # Core utilities and extensions
+├── domain/                  # Domain layer (Business logic)
+├── data/                    # Data layer
+├── presentation/            # Presentation layer
+└── App.kt                   # Application entry point
+```
+
+### Package Organization Rules
+- Package by feature, not by type
+- Keep related code close together
+- One class per file
+- Prefer composition over inheritance
+
+## Feature Module Structure (MVIKotlin Pattern)
+
+### Required Files for Each Feature
+Every feature MUST follow this structure:
+```
+feature/
+├── FeatureComponent.kt      # Decompose Component interface & implementation
+├── FeatureStore.kt          # MVIKotlin Store (Intent, State, Label, Executor, Reducer)
+├── FeatureScreen.kt         # Compose UI
+└── components/              # Feature-specific UI components
+```
+
+### Component Pattern
+```kotlin
+interface FeatureComponent {
+    val model: Value<Model>
+    fun onIntent(intent: Intent)
+    
+    data class Model(
+        val state: FeatureStore.State
+    )
+}
+
+class DefaultFeatureComponent(
+    componentContext: ComponentContext,
+    private val store: FeatureStore
+) : FeatureComponent, ComponentContext by componentContext
+```
+
+### Store Pattern (MVIKotlin)
+```kotlin
+interface FeatureStore : Store<Intent, State, Label> {
+    sealed interface Intent {
+        // User intents
+    }
+    
+    data class State(
+        // UI state - MUST be immutable
+    )
+    
+    sealed interface Label {
+        // Side effects
+    }
+}
+```
+
+## Clean Architecture Rules
+
+### Domain Layer Rules
+- NEVER depend on external layers (data, presentation)
+- Define repository interfaces here
+- Business logic in use cases
+- Pure Kotlin objects only
+- No Android/iOS specific dependencies
+
+### Data Layer Rules
+- Implement domain repository interfaces
+- Handle GraphQL queries/mutations with Apollo
+- Map GraphQL responses to domain models
+- NO local database - GraphQL only
+- Handle network errors gracefully
+
+### Presentation Layer Rules
+- All UI state managed in MVIKotlin Store
+- Unidirectional data flow
+- Immutable state objects
+- Side effects as Labels
+- Compose UI only
+
+## Dependency Injection (Kodein-DI) Rules
+
+### Module Structure
+```kotlin
+val coreModule = DI.Module("core") {
+    bindSingleton { CoroutineDispatchers() }
+}
+
+val networkModule = DI.Module("network") {
+    bindSingleton { ApolloClient.Builder()... }
+}
+
+val domainModule = DI.Module("domain") {
+    bindFactory { GetCountriesUseCase(instance()) }
+}
+
+val dataModule = DI.Module("data") {
+    bindSingleton<CountryRepository> { CountryRepositoryImpl(instance()) }
+}
+
+val presentationModule = DI.Module("presentation") {
+    bindFactory { params -> CountriesStore(instance(), instance()) }
+}
+```
+
+### DI Rules
+- Each layer has its own DI module
+- Use bindSingleton for stateless services
+- Use bindFactory for stateful components
+- Always inject interfaces, not implementations
+
+## Navigation Rules (Decompose)
+
+### Configuration Pattern
+```kotlin
+sealed class Configuration : Parcelable {
+    @Parcelize
+    object Countries : Configuration()
+    
+    @Parcelize
+    data class Details(val countryCode: String) : Configuration()
+}
+```
+
+### Navigation Rules
+- All navigation configurations MUST be Parcelable
+- Use Stack navigation for hierarchical flows
+- Handle back button properly
+- Support deep linking and state restoration
+
+## File Naming Conventions
+
+### Component Files
+- `FeatureComponent.kt` - Interface and implementation
+- `DefaultFeatureComponent.kt` - If implementation is separate
+
+### Store Files
+- `FeatureStore.kt` - Store interface and implementation
+- `FeatureStoreFactory.kt` - If complex store creation needed
+
+### Screen Files
+- `FeatureScreen.kt` - Main Compose screen
+- Components in `components/` subfolder
+
+### Domain Files
+- `EntityName.kt` - Domain models
+- `EntityNameRepository.kt` - Repository interfaces
+- `VerbEntityNameUseCase.kt` - Use cases (e.g., GetCountriesUseCase)
+
+### Data Files
+- `EntityNameRemoteDataSource.kt` - Remote data sources
+- `EntityNameRepositoryImpl.kt` - Repository implementations
+- `EntityNameMapper.kt` - Data mappers
+
+## Code Style Rules
+
+### Kotlin Style
+- Use data classes for immutable state
+- Prefer sealed interfaces/classes for Intent/Label
+- Use coroutines for async operations
+- Prefer extension functions for utilities
+
+### Compose Style
+- Stateless composables when possible
+- Pass state and callbacks as parameters
+- Use remember for expensive computations
+- Follow Material Design 3 guidelines
+
+### GraphQL Rules
+- Use Apollo code generation
+- Define operations in `.graphql` files
+- Map GraphQL types to domain models
+- Handle GraphQL errors properly
+
+## Testing Rules
+
+### Test Structure
+```
+src/
+├── commonTest/             # Shared tests
+│   ├── domain/usecase/     # Unit test use cases
+│   ├── data/repository/    # Integration test repositories
+│   └── presentation/store/ # Test store logic
+├── androidTest/            # Android UI tests
+└── iosTest/                # iOS UI tests
+```
+
+### Testing Guidelines
+- Unit test all business logic (Domain layer)
+- Integration test repositories with mock GraphQL
+- UI test with Compose testing framework
+- Mock external dependencies
+- Test state changes in stores
+
+## Resource Organization
+
+### Compose Resources Structure
+```
+composeResources/
+├── drawable/               # Vector drawables
+├── font/                   # Custom fonts
+├── strings/                # Localization files
+│   ├── strings.xml        # Default (English)
+│   └── strings-{lang}.xml # Other languages
+└── values/                 # Other resources
+```
+
+### Localization Rules
+- Use Compose Resources for i18n
+- Support multiple languages
+- Keep string keys descriptive
+- Group related strings by feature
+
+## Development Guidelines
+
+### New Feature Checklist
+1. Create feature package under `presentation/features/`
+2. Define Component interface and implementation
+3. Create MVIKotlin Store with Intent, State, Label
+4. Implement Compose UI Screen
+5. Add navigation Configuration
+6. Register in DI module
+7. Write unit tests
+8. Update navigation in RootComponent
+
+### Code Quality Rules
+- All UI state in MVIKotlin Store
+- Unidirectional data flow only
+- Immutable state objects
+- Clear separation between layers
+- Interface segregation principle
+- Dependency inversion principle
+
+### Error Handling
+- Handle GraphQL errors gracefully
+- Show user-friendly error messages
+- Log errors for debugging
+- Retry mechanisms for network calls
+
+### Performance Rules
+- Use lazy loading for large lists
+- Implement proper pagination
+- Cache GraphQL responses in Apollo
+- Optimize Compose recomposition
+- Use background threads for heavy operations
+
+## Platform-Specific Rules
+
+### Android Main
+- Implement Android-specific platform interfaces
+- Handle Android lifecycle properly
+- Use Android-specific dependencies only here
+
+### iOS Main
+- Implement iOS-specific platform interfaces
+- Handle iOS lifecycle properly
+- Use iOS-specific dependencies only here
+
+### Common Main
+- Pure Kotlin multiplatform code only
+- No platform-specific dependencies
+- Shared business logic and UI
+
+## Build Configuration Rules
+
+### Version Catalog (libs.versions.toml)
+- Centralize all dependency versions
+- Use version bundles for related dependencies
+- Keep versions up to date
+
+### Gradle Rules
+- Use Kotlin DSL for build scripts
+- Apply common configuration via convention plugins
+- Separate Android and iOS specific configurations
+
+## GraphQL Schema Rules
+
+### Schema Organization
+- Keep schema files in `commonMain/graphql/`
+- Use descriptive operation names
+- Fragment common fields
+- Version schema appropriately
+
+### Apollo Client Configuration
+- Configure code generation properly
+- Use custom scalars when needed
+- Handle nullable fields correctly
+- Implement proper error handling 
+
+### After each task
+- Update the TASK_CHECKLIST.md file with the tasks that have been completed.
+- run build on android and fix error if exists
+- run build on ios and fix error if exists
+- run sl addremove and sl commit -m "TASK_CHECKLIST.md updated"

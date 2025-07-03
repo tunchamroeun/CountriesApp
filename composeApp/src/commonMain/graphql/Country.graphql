@@ -1,0 +1,20 @@
+query Country($country_code: ID!) {
+    country(code: $country_code) {
+        code
+        name
+        capital
+        emoji
+        currency
+        continent {
+            code
+            name
+        }
+        phone
+        phones
+        languages {
+            code
+            name
+            native
+        }
+    }
+}

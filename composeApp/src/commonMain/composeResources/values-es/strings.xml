@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- App name -->
+    <string name="app_name">Aplicación de Países</string>
+    
+    <!-- General UI -->
+    <string name="search">Buscar</string>
+    <string name="retry">Reintentar</string>
+    <string name="try_again">Intentar de nuevo</string>
+    <string name="dismiss">Descartar</string>
+    <string name="reload">Recargar</string>
+    
+    <!-- Navigation -->
+    <string name="navigate_back">Navegar atrás</string>
+    
+    <!-- Countries screen -->
+    <string name="countries">Países</string>
+    <string name="loading_countries">Cargando países...</string>
+    <string name="no_countries_found">No se encontraron países. Por favor, verifica tu conexión e inténtalo de nuevo.</string>
+    <string name="failed_to_refresh">Error al actualizar: %1$s</string>
+    <string name="countries_count">%1$d países disponibles</string>
+    
+    <!-- Search screen -->
+    <string name="search_for_countries">Buscar países</string>
+    <string name="search_placeholder">Buscar países...</string>
+    <string name="search_placeholder_compact">Buscar...</string>
+    <string name="search_countries_hint">Ingresa el nombre de un país, código o ciudad capital para encontrar países coincidentes</string>
+    <string name="searching_countries">Buscando países...</string>
+    <string name="no_results_found">No se encontraron resultados</string>
+    <string name="no_countries_match">No hay países que coincidan con \"%1$s\". Intenta buscar con un término diferente.</string>
+    <string name="clear_search">Limpiar búsqueda</string>
+    
+    <!-- Details screen -->
+    <string name="country_details">Detalles del País</string>
+    <string name="loading_country_details">Cargando detalles del país...</string>
+    <string name="failed_to_load_details">Error al cargar detalles del país '%1$s': %2$s</string>
+    
+    <!-- Country information labels -->
+    <string name="basic_information">Información Básica</string>
+    <string name="location">Ubicación</string>
+    <string name="languages">Idiomas</string>
+    <string name="languages_count">Idiomas (%1$d)</string>
+    <string name="currency_information">Información de Moneda</string>
+    <string name="phone_information">Información Telefónica</string>
+    <string name="technical_information">Información Técnica</string>
+    
+    <!-- Country details labels -->
+    <string name="code">Código</string>
+    <string name="capital">Capital</string>
+    <string name="capital_label">Capital:</string>
+    <string name="continent">Continente</string>
+    <string name="aws_region">Región AWS</string>
+    <string name="primary_currency">Moneda Principal</string>
+    <string name="all_currencies">Todas las Monedas</string>
+    <string name="primary_phone_code">Código Telefónico Principal</string>
+    <string name="all_phone_codes">Todos los Códigos Telefónicos</string>
+    <string name="country_code">Código del País</string>
+    <string name="unicode_emoji">Emoji Unicode</string>
+    
+    <!-- Error messages -->
+    <string name="error">Error</string>
+    <string name="network_error">Error de Red</string>
+    <string name="something_went_wrong">Algo salió mal</string>
+    <string name="no_data_available">No hay datos disponibles</string>
+    <string name="request_timed_out">La solicitud se agotó</string>
+    <string name="no_results_found_title">No se Encontraron Resultados</string>
+    <string name="unknown_error">Ocurrió un error desconocido</string>
+</resources> 

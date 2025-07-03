@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- App name -->
+    <string name="app_name">Countries App</string>
+
+    <!-- General UI -->
+    <string name="search">Search</string>
+    <string name="retry">Retry</string>
+    <string name="try_again">Try Again</string>
+    <string name="dismiss">Dismiss</string>
+    <string name="reload">Reload</string>
+
+    <!-- Error messages -->
+    <string name="error">Error</string>
+    <string name="network_error">Network Error</string>
+    <string name="network_error_icon">Network error icon</string>
+    <string name="something_went_wrong">Something went wrong</string>
+    <string name="no_data_available">No data available</string>
+    <string name="no_results_found_title">No Results</string>
+    <string name="request_timed_out">Request timed out</string>
+    <string name="unknown_error">Unknown error occurred</string>
+
+    <!-- Navigation -->
+    <string name="navigate_back">Navigate back</string>
+
+    <!-- Countries screen -->
+    <string name="countries">Countries</string>
+    <string name="loading_countries">Loading countries...</string>
+    <string name="no_countries_found">No countries found. Please check your connection and try again.</string>
+    <string name="failed_to_refresh">Failed to refresh: %1$s</string>
+    <string name="countries_count">%1$d countries available</string>
+
+    <!-- Search screen -->
+    <string name="search_for_countries">Search for countries</string>
+    <string name="search_placeholder">Search countries...</string>
+    <string name="search_placeholder_compact">Search...</string>
+    <string name="search_countries_hint">Enter a country name, code, or capital city to find matching countries</string>
+    <string name="searching_countries">Searching countries...</string>
+    <string name="no_results_found">No results found</string>
+    <string name="no_countries_match">No countries match \"%1$s\". Try searching with a different term.</string>
+    <string name="clear_search">Clear search</string>
+
+    <!-- Details screen -->
+    <string name="country_details">Country Details</string>
+    <string name="loading_country_details">Loading country details...</string>
+    <string name="failed_to_load_details">Failed to load details for country '%1$s': %2$s</string>
+
+    <!-- Country information labels -->
+    <string name="basic_information">Basic Information</string>
+    <string name="location">Location</string>
+    <string name="languages">Languages</string>
+    <string name="languages_count">Languages (%1$d)</string>
+    <string name="currency_information">Currency Information</string>
+    <string name="phone_information">Phone Information</string>
+    <string name="technical_information">Technical Information</string>
+
+    <!-- Country details labels -->
+    <string name="code">Code</string>
+    <string name="capital">Capital</string>
+    <string name="capital_label">Capital:</string>
+    <string name="continent">Continent</string>
+    <string name="aws_region">AWS Region</string>
+    <string name="primary_currency">Primary Currency</string>
+    <string name="all_currencies">All Currencies</string>
+    <string name="primary_phone_code">Primary Phone Code</string>
+    <string name="all_phone_codes">All Phone Codes</string>
+    <string name="country_code">Country Code</string>
+    <string name="unicode_emoji">Unicode Emoji</string>
+
+    <!-- Platform actions -->
+    <string name="quick_actions">Quick Actions</string>
+    <string name="share">Share</string>
+    <string name="call">Call</string>
+    <string name="maps">Maps</string>
+    <string name="learn_more">Learn More</string>
+</resources> 
