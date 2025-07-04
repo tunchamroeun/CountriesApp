@@ -38,16 +38,17 @@ kotlin {
       implementation(compose.components.resources)
       implementation(compose.components.uiToolingPreview)
       implementation(libs.androidx.lifecycle.runtimeCompose)
+      // Apollo
       implementation(libs.apollo.runtime)
       // Decompose
       implementation(libs.decompose)
       implementation(libs.decompose.extensions)
       // MVI
-      implementation(libs.mvi.kotlin)
-      implementation(libs.mvi.kotlin.main)
-      implementation(libs.mvi.kotlin.extensions.coroutines)
-      implementation(libs.mvi.kotlin.logging)
-      implementation(libs.mvi.kotlin.timetravel)
+      implementation(libs.mvikotlin)
+      implementation(libs.mvikotlin.main)
+      implementation(libs.mvikotlin.extensions.coroutines)
+      implementation(libs.mvikotlin.logging)
+      implementation(libs.mvikotlin.timetravel)
       implementation(libs.kodein.di)
     }
     commonTest.dependencies {
@@ -72,6 +73,7 @@ android {
   compileSdk = libs.versions.android.compileSdk.get().toInt()
 
   defaultConfig {
+    // Apollo
     applicationId = "com.cloudware.countryapp"
     minSdk = libs.versions.android.minSdk.get().toInt()
     targetSdk = libs.versions.android.targetSdk.get().toInt()
