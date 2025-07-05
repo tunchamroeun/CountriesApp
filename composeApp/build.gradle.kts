@@ -45,6 +45,7 @@ kotlin {
       implementation(libs.decompose.extensions)
       // MVI
       implementation(libs.mvikotlin)
+      implementation(libs.essenty.lifecycle.coroutines)
       implementation(libs.mvikotlin.main)
       implementation(libs.mvikotlin.extensions.coroutines)
       implementation(libs.mvikotlin.logging)

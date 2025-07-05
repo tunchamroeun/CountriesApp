@@ -3,7 +3,6 @@ package com.cloudware.countryapp.presentation.features.countries
 import com.arkivanov.decompose.ComponentContext
 import com.arkivanov.decompose.value.Value
 import com.arkivanov.mvikotlin.core.instancekeeper.getStore
-import com.arkivanov.mvikotlin.core.rx.observer
 import com.arkivanov.mvikotlin.core.store.StoreFactory
 import com.cloudware.countryapp.core.utils.CoroutineDispatchers
 import com.cloudware.countryapp.core.utils.asValue
@@ -25,6 +24,8 @@ interface CountriesComponent {
 
   /** Callback for when search is clicked */
   fun onSearchClicked()
+
+  fun onDetailClicked(code: String)
 }
 
 /** Default implementation of CountriesComponent */
@@ -47,13 +48,14 @@ class DefaultCountriesComponent(
 
   init {
     // Handle store labels using MVIKotlin's observer API
-    store.labels(
-        observer(
-            onNext = { label ->
-              when (label) {
-                is CountriesStore.Label.NavigateToDetails -> onCountrySelected(label.countryCode)
-              }
-            }))
+    //    store.labels(
+    //        observer(
+    //            onNext = { label ->
+    //              when (label) {
+    //                is CountriesStore.Label.NavigateToDetails ->
+    // onCountrySelected(label.countryCode)
+    //              }
+    //            }))
 
     // Load countries on start
     store.accept(CountriesStore.Intent.LoadCountries)
@@ -67,6 +69,10 @@ class DefaultCountriesComponent(
 
   override fun onSearchClicked() {
     onSearchClickedCallback.invoke()
+  }
+
+  override fun onDetailClicked(code: String) {
+    onCountrySelected(code)
   }
 }
 

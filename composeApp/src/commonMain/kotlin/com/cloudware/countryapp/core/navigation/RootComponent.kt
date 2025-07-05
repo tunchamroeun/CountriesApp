@@ -7,6 +7,9 @@ import com.arkivanov.decompose.router.stack.childStack
 import com.arkivanov.decompose.router.stack.pop
 import com.arkivanov.decompose.router.stack.pushNew
 import com.arkivanov.decompose.value.Value
+import com.arkivanov.essenty.backhandler.BackHandlerOwner
+import com.arkivanov.mvikotlin.core.instancekeeper.getStore
+import com.arkivanov.mvikotlin.core.rx.observer
 import com.arkivanov.mvikotlin.core.store.StoreFactory
 import com.cloudware.countryapp.core.utils.CoroutineDispatchers
 import com.cloudware.countryapp.domain.usecase.GetCountriesUseCase
@@ -19,10 +22,11 @@ import com.cloudware.countryapp.presentation.features.details.DetailsComponent
 import com.cloudware.countryapp.presentation.features.search.DefaultSearchComponent
 import com.cloudware.countryapp.presentation.features.search.SearchComponent
 import kotlinx.serialization.Serializable
-import kotlinx.serialization.builtins.serializer
 
-interface RootComponent {
+interface RootComponent : BackHandlerOwner {
   val stack: Value<ChildStack<*, Child>>
+
+  fun onIntent(intent: RootStore.Intent)
 
   sealed class Child {
     class CountriesChild(val component: CountriesComponent) : Child()
@@ -42,6 +46,13 @@ class DefaultRootComponent(
     private val dispatchers: CoroutineDispatchers
 ) : RootComponent, ComponentContext by componentContext {
 
+  private val store =
+      instanceKeeper.getStore {
+        RootStore(
+            storeFactory = storeFactory,
+        )
+      }
+
   private val navigation = StackNavigation<Configuration>()
 
   override val stack: Value<ChildStack<*, RootComponent.Child>> =
@@ -51,6 +62,16 @@ class DefaultRootComponent(
           initialConfiguration = Configuration.Countries,
           handleBackButton = true,
           childFactory = ::child)
+
+  init {
+    store.labels(
+        observer(
+            onNext = { label ->
+              when (label) {
+                is RootStore.Label.NavigateBack -> onNavigateBack()
+              }
+            }))
+  }
 
   private fun child(
       configuration: Configuration,
@@ -94,6 +115,14 @@ class DefaultRootComponent(
                         },
                         onBackClicked = { navigation.pop() }))
       }
+
+  private fun onNavigateBack() {
+    navigation.pop()
+  }
+
+  override fun onIntent(intent: RootStore.Intent) {
+    store.accept(intent)
+  }
 
   @Serializable
   sealed interface Configuration {

@@ -6,7 +6,7 @@ import org.kodein.di.DI
 import org.kodein.di.bindSingleton
 
 /** iOS-specific dependency injection module Provides platform-specific implementations for iOS */
-val iosModule =
+fun iosModule() =
     DI.Module("ios") {
       // Bind Platform implementation for iOS
       bindSingleton<Platform> { getPlatform() }
@@ -15,7 +15,7 @@ val iosModule =
 /** Creates the complete DI container for iOS */
 fun createIOSDI(): DI = DI {
   // Import iOS-specific module
-  import(iosModule)
+  import(iosModule())
 
   // Import all common modules
   import(coreModule)

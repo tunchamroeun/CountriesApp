@@ -11,19 +11,20 @@ import org.kodein.di.instance
  * Android-specific dependency injection module Provides platform-specific implementations that
  * require Android context
  */
-val androidModule =
+fun androidModule(context: Context) =
     DI.Module("android") {
       // Bind Platform implementation with context
       bindSingleton<Platform> { getPlatform(instance<Context>()) }
+
+      // Bind Android context first
+      bindSingleton<Context> { context }
     }
 
 /** Creates the complete DI container for Android with context */
 fun createAndroidDI(context: Context): DI = DI {
-  // Bind Android context first
-  bindSingleton<Context> { context }
 
   // Import Android-specific module
-  import(androidModule)
+  import(androidModule(context = context))
 
   // Import all common modules
   import(coreModule)
