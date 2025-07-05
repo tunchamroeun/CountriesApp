@@ -210,6 +210,7 @@ private fun CountriesListContent(
         onRefresh = onRefresh,
         state = pullToRefreshState,
         modifier = Modifier.fillMaxSize().testTag("CountriesList"),
+        contentAlignment = Alignment.TopCenter,
         indicator = {
           PullToRefreshDefaults.Indicator(
               modifier = Modifier.testTag("PullRefreshIndicator"),
