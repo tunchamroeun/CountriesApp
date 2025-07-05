@@ -1,10 +1,5 @@
 package com.cloudware.countryapp
 
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.safeDrawingPadding
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Surface
-import androidx.compose.ui.Modifier
 import androidx.compose.ui.window.ComposeUIViewController
 import com.cloudware.countryapp.core.di.DIContainer
 import com.cloudware.countryapp.core.di.createIOSDI
@@ -22,12 +17,7 @@ fun MainViewController(): UIViewController {
         // Configure iOS-specific behaviors
         // This closure allows for future iOS-specific configurations
       }) {
-        // Wrap the app with Surface to handle iOS safe areas properly
-        Surface(
-            modifier = Modifier.fillMaxSize().safeDrawingPadding(),
-            color = MaterialTheme.colorScheme.background) {
-              App()
-            }
+        App()
       }
 }
 
@@ -45,10 +35,6 @@ fun MainViewControllerWithConfig(configure: () -> Unit = {}): UIViewController {
 
         configure()
       }) {
-        Surface(
-            modifier = Modifier.fillMaxSize().safeDrawingPadding(),
-            color = MaterialTheme.colorScheme.background) {
-              App()
-            }
+        App()
       }
 }

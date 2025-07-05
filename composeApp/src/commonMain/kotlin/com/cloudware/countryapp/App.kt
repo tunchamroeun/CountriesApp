@@ -1,8 +1,6 @@
 package com.cloudware.countryapp
 
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Surface
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import com.arkivanov.decompose.DefaultComponentContext
@@ -35,11 +33,7 @@ import org.kodein.di.instance
  */
 @Composable
 fun App() {
-  CountriesTheme {
-    Surface(modifier = Modifier.fillMaxSize(), color = MaterialTheme.colorScheme.background) {
-      AppContent()
-    }
-  }
+  CountriesTheme { AppContent() }
 }
 
 /**
