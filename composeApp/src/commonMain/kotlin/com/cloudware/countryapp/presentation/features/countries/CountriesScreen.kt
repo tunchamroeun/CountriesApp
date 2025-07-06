@@ -1,15 +1,36 @@
 package com.cloudware.countryapp.presentation.features.countries
 
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Search
-import androidx.compose.material3.*
+import androidx.compose.material3.Card
+import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
+import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Surface
+import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
+import androidx.compose.material3.TopAppBar
+import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.material3.pulltorefresh.PullToRefreshBox
 import androidx.compose.material3.pulltorefresh.PullToRefreshDefaults
 import androidx.compose.material3.pulltorefresh.rememberPullToRefreshState
-import androidx.compose.runtime.*
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.testTag
@@ -21,8 +42,17 @@ import com.cloudware.countryapp.presentation.components.ErrorType
 import com.cloudware.countryapp.presentation.components.ErrorView
 import com.cloudware.countryapp.presentation.theme.CountriesTheme
 import com.cloudware.countryapp.presentation.theme.Spacing
-import countriesapp.composeapp.generated.resources.*
 import countriesapp.composeapp.generated.resources.Res
+import countriesapp.composeapp.generated.resources.countries
+import countriesapp.composeapp.generated.resources.countries_count
+import countriesapp.composeapp.generated.resources.dismiss
+import countriesapp.composeapp.generated.resources.failed_to_refresh
+import countriesapp.composeapp.generated.resources.loading_countries
+import countriesapp.composeapp.generated.resources.no_countries_found
+import countriesapp.composeapp.generated.resources.reload
+import countriesapp.composeapp.generated.resources.search_for_countries
+import countriesapp.composeapp.generated.resources.try_again
+import countriesapp.composeapp.generated.resources.unknown_error
 import org.jetbrains.compose.resources.stringResource
 
 /**
@@ -45,6 +75,7 @@ fun CountriesScreen(
       modifier = modifier.fillMaxSize().testTag("CountriesScreen"),
       topBar = { CountriesTopBar(onSearchClicked = onSearchClicked) }) { paddingValues ->
         CountriesContent(
+            component = component,
             state = state,
             onIntent = component::onIntent,
             modifier = Modifier.padding(paddingValues))
@@ -80,6 +111,7 @@ private fun CountriesTopBar(onSearchClicked: () -> Unit) {
 @Composable
 private fun CountriesContent(
     state: CountriesStore.State,
+    component: CountriesComponent,
     onIntent: (CountriesStore.Intent) -> Unit,
     modifier: Modifier = Modifier
 ) {
@@ -104,7 +136,8 @@ private fun CountriesContent(
             countries = state.countries,
             isRefreshing = state.isRefreshing,
             onCountryClick = { countryCode ->
-              onIntent(CountriesStore.Intent.SelectCountry(countryCode))
+              //              onIntent(CountriesStore.Intent.SelectCountry(countryCode))
+              component.onDetailClicked(countryCode)
             },
             onRefresh = { onIntent(CountriesStore.Intent.Refresh) },
             error = state.error,
