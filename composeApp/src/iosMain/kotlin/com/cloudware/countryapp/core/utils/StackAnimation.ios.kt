@@ -10,7 +10,7 @@ import com.arkivanov.decompose.ExperimentalDecomposeApi
 import com.arkivanov.decompose.extensions.compose.stack.animation.StackAnimation
 import com.arkivanov.decompose.extensions.compose.stack.animation.StackAnimator
 import com.arkivanov.decompose.extensions.compose.stack.animation.isFront
-import com.arkivanov.decompose.extensions.compose.stack.animation.predictiveback.predictiveBackAnimatable
+import com.arkivanov.decompose.extensions.compose.stack.animation.predictiveback.predictiveBackAnimatable as decomposeBackAnimatable
 import com.arkivanov.decompose.extensions.compose.stack.animation.stackAnimation
 import com.arkivanov.decompose.extensions.compose.stack.animation.stackAnimator
 import com.arkivanov.essenty.backhandler.BackHandler
@@ -18,7 +18,7 @@ import com.arkivanov.essenty.backhandler.BackHandler
 @OptIn(ExperimentalDecomposeApi::class)
 actual fun <C : Any, T : Any> backAnimation(
     backHandler: BackHandler,
-    animationSelector: ((T) -> StackAnimation<C, T>?)?,
+    animationSelector: ((childInstance: T) -> StackAnimation<C, T>?)?,
     onBack: () -> Unit,
 ): StackAnimation<C, T> =
     predictiveBackAnimation(
@@ -26,11 +26,37 @@ actual fun <C : Any, T : Any> backAnimation(
         animationSelector = animationSelector,
         fallbackAnimation = stackAnimation(iosLikeSlide()),
         selector = { initialBackEvent, _, _ ->
-          predictiveBackAnimatable(
-              initialBackEvent = initialBackEvent,
-              exitModifier = { progress, _ -> Modifier.slideExitModifier(progress = progress) },
-              enterModifier = { progress, _ -> Modifier.slideEnterModifier(progress = progress) },
-          )
+          val decomposeAnimatable =
+              decomposeBackAnimatable(
+                  initialBackEvent = initialBackEvent,
+                  exitModifier = { progress: Float, _ ->
+                    Modifier.slideExitModifier(progress = progress)
+                  },
+                  enterModifier = { progress: Float, _ ->
+                    Modifier.slideEnterModifier(progress = progress)
+                  },
+              )
+
+          // Adapter to convert from Decompose's PredictiveBackAnimatable to our custom interface
+          object : PredictiveBackAnimatable {
+            override suspend fun animate(backEvent: com.arkivanov.essenty.backhandler.BackEvent) {
+              decomposeAnimatable.animate(backEvent)
+            }
+
+            override suspend fun finish() {
+              decomposeAnimatable.finish()
+            }
+
+            override suspend fun cancel() {
+              decomposeAnimatable.cancel()
+            }
+
+            @androidx.compose.runtime.Composable
+            override fun enterModifier(): Modifier = decomposeAnimatable.enterModifier
+
+            @androidx.compose.runtime.Composable
+            override fun exitModifier(): Modifier = decomposeAnimatable.exitModifier
+          }
         },
         onBack = onBack,
     )

@@ -75,6 +75,7 @@ fun CountriesScreen(
       modifier = modifier.fillMaxSize().testTag("CountriesScreen"),
       topBar = { CountriesTopBar(onSearchClicked = onSearchClicked) }) { paddingValues ->
         CountriesContent(
+            component = component,
             state = state,
             onIntent = component::onIntent,
             modifier = Modifier.padding(paddingValues))
@@ -110,6 +111,7 @@ private fun CountriesTopBar(onSearchClicked: () -> Unit) {
 @Composable
 private fun CountriesContent(
     state: CountriesStore.State,
+    component: CountriesComponent,
     onIntent: (CountriesStore.Intent) -> Unit,
     modifier: Modifier = Modifier
 ) {
@@ -135,6 +137,7 @@ private fun CountriesContent(
             isRefreshing = state.isRefreshing,
             onCountryClick = { countryCode ->
               //              onIntent(CountriesStore.Intent.SelectCountry(countryCode))
+              component.onDetailClicked(countryCode)
             },
             onRefresh = { onIntent(CountriesStore.Intent.Refresh) },
             error = state.error,

@@ -42,6 +42,7 @@ private fun AppContent(component: RootComponent, modifier: Modifier) {
       animation =
           backAnimation(
               backHandler = component.backHandler,
+              animationSelector = null,
               onBack = { component.onIntent(RootStore.Intent.GoBack) },
           )) {
         when (val instance = it.instance) {

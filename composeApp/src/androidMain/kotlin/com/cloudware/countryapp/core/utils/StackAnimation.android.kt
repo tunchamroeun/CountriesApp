@@ -9,7 +9,7 @@ import com.arkivanov.essenty.backhandler.BackHandler
 @OptIn(ExperimentalDecomposeApi::class)
 actual fun <C : Any, T : Any> backAnimation(
     backHandler: BackHandler,
-    animationSelector: ((T) -> StackAnimation<C, T>?)?,
+    animationSelector: ((childInstance: T) -> StackAnimation<C, T>?)?,
     onBack: () -> Unit,
 ): StackAnimation<C, T> =
     predictiveBackAnimation(
